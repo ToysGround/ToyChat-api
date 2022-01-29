@@ -12,6 +12,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "USER_TB")
+//22
 public class UserTb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

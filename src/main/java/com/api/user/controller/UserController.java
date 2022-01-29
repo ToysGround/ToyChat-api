@@ -62,7 +62,7 @@ public class UserController {
         }
         return new ResponseEntity<>(map, HttpStatus.OK); //200
     }
-
+//2222
     @PostMapping("/findId")
     public ResponseEntity<?> findByUserId(@RequestBody Map data){
         HashMap<String, String> map = new HashMap<>();
