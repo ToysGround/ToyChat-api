@@ -47,7 +47,7 @@ public class UserService {
         userRepository.deleteById(sq);
         return "ok";
     }
-
+//dsadasdas
     @Transactional(readOnly = true)
     public boolean findByUserId(String userId){
         UserTb userEntity = userRepository.findByUserId(userId);
