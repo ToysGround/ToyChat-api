@@ -16,7 +16,7 @@ public class UserTb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_SQ", nullable = false)
-    private Integer id;
+    private long id;
 
     @Column(name = "USER_ID")
     private String userId;
@@ -28,13 +28,13 @@ public class UserTb {
     private String userNm;
 
     @Column(name = "USER_SEX")
-    private Character userSex;
+    private String userSex;
 
     @Column(name = "USER_HP")
-    private Integer userHp;
+    private String userHp;
 
     @Column(name = "USER_BIRTH")
-    private Integer userBirth;
+    private String userBirth;
 
     @Column(name = "USER_ST")
     private Character userSt;
@@ -69,27 +69,27 @@ public class UserTb {
         this.userSt = userSt;
     }
 
-    public Integer getUserBirth() {
+    public String getUserBirth() {
         return userBirth;
     }
 
-    public void setUserBirth(Integer userBirth) {
+    public void setUserBirth(String userBirth) {
         this.userBirth = userBirth;
     }
 
-    public Integer getUserHp() {
+    public String getUserHp() {
         return userHp;
     }
 
-    public void setUserHp(Integer userHp) {
+    public void setUserHp(String userHp) {
         this.userHp = userHp;
     }
 
-    public Character getUserSex() {
+    public String getUserSex() {
         return userSex;
     }
 
-    public void setUserSex(Character userSex) {
+    public void setUserSex(String userSex) {
         this.userSex = userSex;
     }
 

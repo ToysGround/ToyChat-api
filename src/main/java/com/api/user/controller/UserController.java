@@ -49,10 +49,21 @@ public class UserController {
 
     @DeleteMapping("/delete/{sq}")
     public ResponseEntity<?> delete(@PathVariable long sq){
-        return new ResponseEntity<>(userService.delete(sq), HttpStatus.OK); //200
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            UserTb userEntity = userService.findOne(sq);
+            String userId = userEntity.getUserId();
+            String signUpId = userService.delete(sq);
+            map.put("success","true");
+            map.put("message","삭제 완료");
+            map.put("data",userId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK); //200
     }
 
-    @GetMapping("/findId")
+    @PostMapping("/findId")
     public ResponseEntity<?> findByUserId(@RequestBody Map data){
         HashMap<String, String> map = new HashMap<>();
 
