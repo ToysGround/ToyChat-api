@@ -1,5 +1,6 @@
 package com.api.user.controller;
 
+import com.api.user.common.Com;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +18,36 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    public Com com;
 
     @PostMapping("/signUp")
     public ResponseEntity<?> signUp(@RequestBody UserTb user){
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         try {
             String signUpId = userService.insert(user);
-            map.put("success","true");
-            map.put("message","가입 성공");
-            map.put("data",signUpId);
+            map.putAll(com.inputMap(true,"가입 성공",signUpId));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK); //200
+    }
+
+    @PostMapping("/signIn")
+    public ResponseEntity<?> signIn(@RequestBody UserTb user){
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            String signInId = user.getUserId();
+            String signInPwd = user.getUserPwd();
+            UserTb userEntity = userService.findByUserIdReturnUser(signInId);
+            if(userEntity == null) {
+                map.putAll(com.inputMap(false,"ID를 다시입력해주세요.",signInId));
+                return new ResponseEntity<>(map, HttpStatus.OK); //200
+            }else if(!userEntity.getUserPwd().equalsIgnoreCase(signInPwd)){
+                map.putAll(com.inputMap(false,"PWD를 다시입력해주세요.",signInPwd));
+                return new ResponseEntity<>(map, HttpStatus.OK); //200
+            }else {
+                map.putAll(com.inputMap(true,"로그인 성공",null));
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -50,14 +72,12 @@ public class UserController {
 
     @DeleteMapping("/delete/{sq}")
     public ResponseEntity<?> delete(@PathVariable long sq){
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         try {
             UserTb userEntity = userService.findOne(sq);
             String userId = userEntity.getUserId();
             String signUpId = userService.delete(sq);
-            map.put("success","true");
-            map.put("message","삭제 완료");
-            map.put("data",userId);
+            map.putAll(com.inputMap(true,"삭제 완료",userId));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -66,17 +86,13 @@ public class UserController {
 
     @PostMapping("/findId")
     public ResponseEntity<?> findByUserId(@RequestBody Map data){
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
 
         if(userService.findByUserId(data.get("userId").toString())){
-            map.put("success", "true");
-            map.put("message","사용 가능한 ID입니다.");
-            map.put("data",null);
+            map.putAll(com.inputMap(true,"사용 가능한 ID입니다.",null));
         }
         else {
-            map.put("success", "false");
-            map.put("message","사용중인 ID입니다.");
-            map.put("data",null);
+            map.putAll(com.inputMap(false,"사용중인 ID입니다.",null));
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK); //200

@@ -47,12 +47,18 @@ public class UserService {
         userRepository.deleteById(sq);
         return "ok";
     }
-//dsadasdas
+
+
     @Transactional(readOnly = true)
     public boolean findByUserId(String userId){
         UserTb userEntity = userRepository.findByUserId(userId);
         if(userEntity == null || userEntity.getUserId() == ""  )return true;
         return false;
+    }
+
+    @Transactional(readOnly = true)
+    public UserTb findByUserIdReturnUser(String userId){
+        return userRepository.findByUserId(userId);
     }
 
 }

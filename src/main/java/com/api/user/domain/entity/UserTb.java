@@ -102,6 +102,10 @@ public class UserTb {
         this.userNm = userNm;
     }
 
+    public String getUserPwd() {
+        return userPwd;
+    }
+
     public void setUserPwd(String userPwd) {
         this.userPwd = userPwd;
     }
