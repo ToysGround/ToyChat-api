@@ -6,9 +6,18 @@ import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -19,6 +28,7 @@ public class UserController {
 
     private final UserService userService;
     public Com com;
+    final String URL_LOCAL = "http://localhost:8081/jwt/";
 
     @PostMapping("/signUp")
     public ResponseEntity<?> signUp(@RequestBody UserTb user){
@@ -33,20 +43,45 @@ public class UserController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<?> signIn(@RequestBody UserTb user){
+    public ResponseEntity<?> signIn(@RequestBody Map param){ //UserTB -> Map으로 변경
         HashMap<String, Object> map = new HashMap<>();
         try {
-            String signInId = user.getUserId();
-            String signInPwd = user.getUserPwd();
+            String signInId = param.get("userId").toString();
+            String signInPwd = param.get("userPwd").toString();
+            String singInGBNo = param.get("gourpNo").toString();
             UserTb userEntity = userService.findByUserIdReturnUser(signInId);
+
             if(userEntity == null) {
                 map.putAll(com.inputMap(false,"ID를 다시입력해주세요.",signInId));
                 return new ResponseEntity<>(map, HttpStatus.OK); //200
             }else if(!userEntity.getUserPwd().equalsIgnoreCase(signInPwd)){
                 map.putAll(com.inputMap(false,"PWD를 다시입력해주세요.",signInPwd));
                 return new ResponseEntity<>(map, HttpStatus.OK); //200
-            }else {
-                map.putAll(com.inputMap(true,"로그인 성공",null));
+            }
+
+            ///////////////////////////token api
+
+            List<HttpMessageConverter<?>> converts = new ArrayList<HttpMessageConverter<?>>();
+            converts.add(new FormHttpMessageConverter());
+            converts.add(new StringHttpMessageConverter());
+
+            RestTemplate restTemplate = new RestTemplate();
+           // restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            restTemplate.setMessageConverters(converts);
+
+            MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+            tokenMap.add("userId" , signInId);
+            tokenMap.add("userPwd", signInPwd);
+            tokenMap.add("gourpNo"   , singInGBNo);
+            System.out.println("*************************************");
+            String result = restTemplate.postForObject(URL_LOCAL+"signIn", tokenMap, String.class) ;
+            System.out.println(result);
+            /////////////////////////////////////////////////////////////////////////////////
+
+            if(result != null) {
+                map.putAll(com.inputMap(true,"로그인 성공",signInId));
+            }else{
+                map.putAll(com.inputMap(false,"token 발급 오류",null));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -96,6 +131,13 @@ public class UserController {
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK); //200
+    }
+
+    @PostMapping("/searchId")
+    public ResponseEntity<?> searchByUserId(@RequestParam String id){
+
+        //return new ResponseEntity<>(userService.findByUserIdReturnUser(id), HttpStatus.OK); //200
+        return new ResponseEntity<>(userService.findByUserIdReturnUser(id).getUserId(), HttpStatus.OK); //200
     }
 
 }

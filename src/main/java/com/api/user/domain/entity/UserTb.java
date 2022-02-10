@@ -12,7 +12,6 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "USER_TB")
-//22
 public class UserTb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +28,7 @@ public class UserTb {
     private String userNm;
 
     @Column(name = "USER_SEX")
+    //@Enumerated(EnumType.ORDINAL)
     private String userSex;
 
     @Column(name = "USER_HP")
@@ -38,84 +38,14 @@ public class UserTb {
     private String userBirth;
 
     @Column(name = "USER_ST")
-    private Character userSt;
+    //@Enumerated(EnumType.ORDINAL)
+    private String userSt;
 
     @Column(name = "USER_GB")
-    private Character userGb;
+    //@Enumerated(EnumType.ORDINAL)
+    private String userGb;
 
     @Column(name = "REG_DT")
     private Instant regDt;
-
-    public Instant getRegDt() {
-        return regDt;
-    }
-
-    public void setRegDt(Instant regDt) {
-        this.regDt = regDt;
-    }
-
-    public Character getUserGb() {
-        return userGb;
-    }
-
-    public void setUserGb(Character userGb) {
-        this.userGb = userGb;
-    }
-
-    public Character getUserSt() {
-        return userSt;
-    }
-
-    public void setUserSt(Character userSt) {
-        this.userSt = userSt;
-    }
-
-    public String getUserBirth() {
-        return userBirth;
-    }
-
-    public void setUserBirth(String userBirth) {
-        this.userBirth = userBirth;
-    }
-
-    public String getUserHp() {
-        return userHp;
-    }
-
-    public void setUserHp(String userHp) {
-        this.userHp = userHp;
-    }
-
-    public String getUserSex() {
-        return userSex;
-    }
-
-    public void setUserSex(String userSex) {
-        this.userSex = userSex;
-    }
-
-    public String getUserNm() {
-        return userNm;
-    }
-
-    public void setUserNm(String userNm) {
-        this.userNm = userNm;
-    }
-
-    public String getUserPwd() {
-        return userPwd;
-    }
-
-    public void setUserPwd(String userPwd) {
-        this.userPwd = userPwd;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
 }
