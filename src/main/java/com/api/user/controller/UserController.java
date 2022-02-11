@@ -52,7 +52,7 @@ public class UserController {
         try {
             String signInId = param.get("userId").toString();
             String signInPwd = param.get("userPwd").toString();
-            String singInGBNo = param.get("gourpNo").toString();
+            String singInGBNo = param.get("serviceNo").toString();
             UserTb userEntity = userService.findByUserIdReturnUser(signInId);
 
             if(userEntity == null) {
@@ -78,7 +78,7 @@ public class UserController {
             MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
             tokenMap.add("userId" , signInId);
             tokenMap.add("userPwd", signInPwd);
-            tokenMap.add("gourpNo"   , singInGBNo);
+            tokenMap.add("serviceNo"   , singInGBNo);
 
             /*Charset utf8 = Charset.forName("UTF-8");
             MediaType mediaType = new MediaType("application", "json", utf8);
@@ -96,11 +96,11 @@ public class UserController {
                     TokenDto.class);*/
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
-            Cookie cookie = Com.createCookie(result.getRefreshToken());
+            Cookie cookie = Com.createCookie(result.getRefreshTokenKey());
             //Cookie cookie = Com.createCookie(result.getBody().getRefreshToken());
             response.addCookie(cookie);
             if(result != null) {
-                map.putAll(com.inputMap(true,"로그인 성공",result));
+                map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
             }else{
                 map.putAll(com.inputMap(false,"token 발급 오류",signInId));
             }
