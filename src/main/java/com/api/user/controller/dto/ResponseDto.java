@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class ResponseDto {
+    private String dsad;
 }

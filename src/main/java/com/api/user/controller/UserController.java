@@ -5,8 +5,7 @@ import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -18,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,24 +64,40 @@ public class UserController {
             }
 
             ///////////////////////////token api
+           // List<HttpMessageConverter<?>> converts = new ArrayList<HttpMessageConverter<?>>();
+           // converts.add(new FormHttpMessageConverter());
+            //converts.add(new StringHttpMessageConverter());
 
-            List<HttpMessageConverter<?>> converts = new ArrayList<HttpMessageConverter<?>>();
-            converts.add(new FormHttpMessageConverter());
-            converts.add(new StringHttpMessageConverter());
 
             RestTemplate restTemplate = new RestTemplate();
            // restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            restTemplate.setMessageConverters(converts);
+            //restTemplate.setMessageConverters(converts);
+//////////////////////////////////////
+
 
             MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
             tokenMap.add("userId" , signInId);
             tokenMap.add("userPwd", signInPwd);
             tokenMap.add("gourpNo"   , singInGBNo);
+
+            /*Charset utf8 = Charset.forName("UTF-8");
+            MediaType mediaType = new MediaType("application", "json", utf8);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(mediaType);
+
+            HttpEntity<Map> entity = new HttpEntity<>(tokenMap, headers);*/
+
             System.out.println("*************************************");
             TokenDto result = restTemplate.postForObject(URL_LOCAL+"signIn", tokenMap, TokenDto.class) ;
+           /* ResponseEntity<TokenDto> result = restTemplate.exchange(URL_LOCAL+"signIn",
+                    HttpMethod.POST,
+                    entity,
+                    TokenDto.class);*/
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
             Cookie cookie = Com.createCookie(result.getRefreshToken());
+            //Cookie cookie = Com.createCookie(result.getBody().getRefreshToken());
             response.addCookie(cookie);
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result));
