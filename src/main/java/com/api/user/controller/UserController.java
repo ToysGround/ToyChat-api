@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -92,14 +93,18 @@ public class UserController {
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
             //ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
-            Cookie cookie1 = new Cookie("refreshTokenKey",result.getRefreshTokenKey());
+           /* Cookie cookie1 = new Cookie("refreshTokenKey",result.getRefreshTokenKey());
             cookie1.setPath("/");
             cookie1.setMaxAge(60*60*1);
-            cookie1.setHttpOnly(false);
+            cookie1.setHttpOnly(false);*/
             //cookie1.setSecure(true);
            // cookie = responseCookie.toString();
-            System.out.println(cookie1.toString());
-            response.addCookie(cookie1);
+            CookieGenerator cg = new CookieGenerator();
+            cg.setCookieName("refreshTokenKey");
+            cg.addCookie(response,result.getRefreshTokenKey());
+            System.out.println(cg.toString());
+            //response.addCookie(cookie1);
+
            // response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
