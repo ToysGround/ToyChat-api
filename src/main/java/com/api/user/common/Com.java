@@ -26,7 +26,7 @@ public class Com {
     public static ResponseCookie createCookie(String refreshKey){
         ResponseCookie cookie =ResponseCookie.from("refreshKey", refreshKey)
                                     .httpOnly(true)
-                                    .secure(true)
+                                    //.secure(true)
                                     .path("/")
                                     .sameSite("Lax")
                 .domain("localhost")
