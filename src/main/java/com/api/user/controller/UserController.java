@@ -1,6 +1,7 @@
 package com.api.user.controller;
 
 import com.api.user.common.Com;
+import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +46,8 @@ public class UserController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<?> signIn(@RequestBody Map param){ //UserTB -> Map으로 변경
+    //public ResponseEntity<?> signIn(@RequestBody Map param){ //UserTB -> Map으로 변경
+    public ResponseEntity<?> signIn(@RequestBody Map param, HttpServletResponse response){ //UserTB -> Map으로 변경
         HashMap<String, Object> map = new HashMap<>();
         try {
             String signInId = param.get("userId").toString();
@@ -74,14 +78,15 @@ public class UserController {
             tokenMap.add("userPwd", signInPwd);
             tokenMap.add("gourpNo"   , singInGBNo);
             System.out.println("*************************************");
-            String result = restTemplate.postForObject(URL_LOCAL+"signIn", tokenMap, String.class) ;
+            TokenDto result = restTemplate.postForObject(URL_LOCAL+"signIn", tokenMap, TokenDto.class) ;
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
-
+            Cookie cookie = Com.createCookie(result.getRefreshToken());
+            response.addCookie(cookie);
             if(result != null) {
-                map.putAll(com.inputMap(true,"로그인 성공",signInId));
+                map.putAll(com.inputMap(true,"로그인 성공",result));
             }else{
-                map.putAll(com.inputMap(false,"token 발급 오류",null));
+                map.putAll(com.inputMap(false,"token 발급 오류",signInId));
             }
         }catch (Exception e){
             e.printStackTrace();
