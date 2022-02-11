@@ -27,6 +27,7 @@ public class Com {
         ResponseCookie cookie =ResponseCookie.from("refreshKey", refreshKey)
                                     .httpOnly(true)
                                     //.secure(true)
+                .maxAge(60*60*1)
                                     .path("/")
                                     .sameSite("Lax")
                 .domain("localhost")

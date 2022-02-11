@@ -99,7 +99,7 @@ public class UserController {
             cookie = responseCookie.toString();
             System.out.println(cookie);
           //  response.addCookie(cookie1);
-            response.addHeader("Set-Cookie",cookie.toString());
+            //response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
             }else{
