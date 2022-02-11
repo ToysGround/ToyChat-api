@@ -29,7 +29,8 @@ public class Com {
                                     .secure(true)
                                     .path("/")
                                     .sameSite("Lax")
-                .build();
+                .domain("localhost")
+                                    .build();
         return cookie;
     }
 }

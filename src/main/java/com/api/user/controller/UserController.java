@@ -92,7 +92,11 @@ public class UserController {
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
             ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
-            cookie = responseCookie.toString();
+            Cookie cookie1 = new Cookie("refreshTokenKey",result.getRefreshTokenKey());
+            cookie1.setPath("/");
+           /* cookie = responseCookie.toString();
+            System.out.println(cookie);*/
+            response.addCookie(cookie1);
            // response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
@@ -102,10 +106,10 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
         }
-       // return new ResponseEntity<>(map, HttpStatus.OK); //200
-        return ResponseEntity.ok()
+        return new ResponseEntity<>(map, HttpStatus.OK); //200
+        /*return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie)
-                .body(map);
+                .body(map);*/
     }
 
     @GetMapping("/find")
