@@ -29,8 +29,7 @@ public class Com {
                                     //.secure(true)
                 .maxAge(60*60*1)
                                     .path("/")
-                                    .sameSite("Lax")
-                .domain("localhost")
+                                    .sameSite("None")
                                     .build();
         return cookie;
     }
