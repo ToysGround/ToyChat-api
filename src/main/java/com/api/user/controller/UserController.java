@@ -49,6 +49,7 @@ public class UserController {
     //public ResponseEntity<?> signIn(@RequestBody Map param){ //UserTB -> Map으로 변경
     public ResponseEntity<?> signIn(@RequestBody Map param, HttpServletResponse response){ //UserTB -> Map으로 변경
         HashMap<String, Object> map = new HashMap<>();
+        String cookie = "";
         try {
             String signInId = param.get("userId").toString();
             String signInPwd = param.get("userPwd").toString();
@@ -90,8 +91,9 @@ public class UserController {
 
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
-            ResponseCookie cookie = Com.createCookie(result.getRefreshTokenKey());
-            response.addHeader("Set-Cookie",cookie.toString());
+            ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
+            cookie = responseCookie.toString();
+           // response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
             }else{
@@ -100,7 +102,10 @@ public class UserController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new ResponseEntity<>(map, HttpStatus.OK); //200
+       // return new ResponseEntity<>(map, HttpStatus.OK); //200
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie)
+                .body(map);
     }
 
     @GetMapping("/find")
