@@ -68,12 +68,9 @@ public class UserController {
            // converts.add(new FormHttpMessageConverter());
             //converts.add(new StringHttpMessageConverter());
 
-
             RestTemplate restTemplate = new RestTemplate();
            // restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
             //restTemplate.setMessageConverters(converts);
-//////////////////////////////////////
-
 
             MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
             tokenMap.add("userId" , signInId);
@@ -90,15 +87,11 @@ public class UserController {
 
             System.out.println("*************************************");
             TokenDto result = restTemplate.postForObject(URL_LOCAL+"signIn", tokenMap, TokenDto.class) ;
-           /* ResponseEntity<TokenDto> result = restTemplate.exchange(URL_LOCAL+"signIn",
-                    HttpMethod.POST,
-                    entity,
-                    TokenDto.class);*/
+
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
-            Cookie cookie = Com.createCookie(result.getRefreshTokenKey());
-            //Cookie cookie = Com.createCookie(result.getBody().getRefreshToken());
-            response.addCookie(cookie);
+            ResponseCookie cookie = Com.createCookie(result.getRefreshTokenKey());
+            response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
             }else{
