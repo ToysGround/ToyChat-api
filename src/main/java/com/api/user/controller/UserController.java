@@ -94,6 +94,9 @@ public class UserController {
             ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
             Cookie cookie1 = new Cookie("refreshTokenKey",result.getRefreshTokenKey());
             cookie1.setPath("/");
+            cookie1.setHttpOnly(true);
+            cookie1.setSecure(true);
+            cookie1.setDomain("/");
            /* cookie = responseCookie.toString();
             System.out.println(cookie);*/
             response.addCookie(cookie1);
