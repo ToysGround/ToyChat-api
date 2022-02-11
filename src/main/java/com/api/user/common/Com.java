@@ -30,6 +30,7 @@ public class Com {
                 .maxAge(60*60*1)
                                     .path("/")
                                     .sameSite("Lax")
+                .domain(".app.localhost")
                                     .build();
         return cookie;
     }
