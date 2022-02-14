@@ -25,11 +25,11 @@ public class Com {
 
     public static ResponseCookie createCookie(String refreshKey){
         ResponseCookie cookie =ResponseCookie.from("refreshKey", refreshKey)
-                                    //.httpOnly(true)
+                                    .httpOnly(true)
                                     //.secure(true)
                                     .maxAge(60*60*24)
                                     .path("/")
-                                    .sameSite("Lax")
+                                    .sameSite("Strict")
                                     .domain("localhost")
                                     .build();
         return cookie;

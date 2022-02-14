@@ -1,11 +1,16 @@
 package com.api.user.service;
 
 
+import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -13,6 +18,7 @@ import java.util.List;
 public class UserService {
 
     private  final UserRepository userRepository;
+    final String URL_LOCAL = "http://localhost:8081/jwt/";
 
     @Transactional
     public String insert(UserTb user){
@@ -60,4 +66,13 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
+    public boolean vaildUser(String token){
+        RestTemplate restTemplate = new RestTemplate();
+
+        MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+        tokenMap.add("token" , token);
+        boolean result = restTemplate.postForObject(URL_LOCAL+"vaild", tokenMap, boolean.class) ;
+        System.out.println(result);
+        return result;
+    }
 }

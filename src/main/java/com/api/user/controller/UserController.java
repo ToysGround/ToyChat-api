@@ -43,9 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/signIn")
-    //public ResponseEntity<?> signIn(@RequestBody Map param){ //UserTB -> Map으로 변경
     public ResponseEntity<?> signIn(@RequestBody Map param, HttpServletResponse response){ //UserTB -> Map으로 변경
-    //public ResponseEntity<?> signIn(@RequestBody Map param, HttpServletRequest request, HttpServletResponse response){ //UserTB -> Map으로 변경
         HashMap<String, Object> map = new HashMap<>();
         String cookie = "";
         try {
@@ -63,7 +61,6 @@ public class UserController {
             }
 
             ///////////////////////////token api
-
             RestTemplate restTemplate = new RestTemplate();
 
             MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
@@ -71,38 +68,12 @@ public class UserController {
             tokenMap.add("userPwd", signInPwd);
             tokenMap.add("serviceNo"   , singInGBNo);
 
-            /*Charset utf8 = Charset.forName("UTF-8");
-            MediaType mediaType = new MediaType("application", "json", utf8);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(mediaType);
-
-            HttpEntity<Map> entity = new HttpEntity<>(tokenMap, headers);*/
-
-            System.out.println("*************************************");
             TokenDto result = restTemplate.postForObject(URL_LOCAL+"signIn", tokenMap, TokenDto.class) ;
 
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
             ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
-           /* Cookie cookie1 = new Cookie("refreshTokenKey",result.getRefreshTokenKey());
-            cookie1.setPath("/");
-            cookie1.setMaxAge(60*60*1);
-            cookie1.setHttpOnly(false);*/
-
-            //cookie1.setSecure(true);
-
             cookie = responseCookie.toString();
-
-            /*CookieGenerator cg = new CookieGenerator();
-            cg.setCookieName("refreshTokenKey");
-            cg.addCookie(response,result.getRefreshTokenKey());
-            System.out.println(cg.toString());
-            for (Cookie c:cookies) {
-                System.out.println("c : " + c.getName());
-            }*/
-
-            //response.addCookie(cookie1);
 
             response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
@@ -114,9 +85,6 @@ public class UserController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(map, HttpStatus.OK); //200
-        /*return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie)
-                .body(map);*/
     }
 
     @GetMapping("/find")
@@ -167,6 +135,12 @@ public class UserController {
     public ResponseEntity<?> searchByUserId(@RequestParam String id){
 
         return new ResponseEntity<>(userService.findByUserIdReturnUser(id).getUserId(), HttpStatus.OK); //200
+    }
+
+    @GetMapping("/vaildToken")
+    public ResponseEntity<?> vaildUser(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        return new ResponseEntity<>(userService.vaildUser(token), HttpStatus.OK); //200
     }
 
 }
