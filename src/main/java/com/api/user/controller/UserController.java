@@ -140,7 +140,11 @@ public class UserController {
     @GetMapping("/vaildToken")
     public ResponseEntity<?> vaildUser(HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        return new ResponseEntity<>(userService.vaildUser(token), HttpStatus.OK); //200
+        HashMap<String, Object> map = new HashMap<>();
+        if(userService.vaildUser(token)){map.putAll(com.inputMap(userService.vaildUser(token),"사용 가능한 TOKEN 입니다.",token));}
+        else map.putAll(com.inputMap(userService.vaildUser(token),"사용할 수 없는 TOKEN 입니다.",token));
+
+        return new ResponseEntity<>(map, HttpStatus.OK); //200
     }
 
 }
