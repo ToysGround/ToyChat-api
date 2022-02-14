@@ -6,10 +6,7 @@ import com.api.user.domain.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
+
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +14,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.CookieGenerator;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -49,6 +45,7 @@ public class UserController {
     @PostMapping("/signIn")
     //public ResponseEntity<?> signIn(@RequestBody Map param){ //UserTB -> Map으로 변경
     public ResponseEntity<?> signIn(@RequestBody Map param, HttpServletResponse response){ //UserTB -> Map으로 변경
+    //public ResponseEntity<?> signIn(@RequestBody Map param, HttpServletRequest request, HttpServletResponse response){ //UserTB -> Map으로 변경
         HashMap<String, Object> map = new HashMap<>();
         String cookie = "";
         try {
@@ -66,13 +63,8 @@ public class UserController {
             }
 
             ///////////////////////////token api
-           // List<HttpMessageConverter<?>> converts = new ArrayList<HttpMessageConverter<?>>();
-           // converts.add(new FormHttpMessageConverter());
-            //converts.add(new StringHttpMessageConverter());
 
             RestTemplate restTemplate = new RestTemplate();
-           // restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            //restTemplate.setMessageConverters(converts);
 
             MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
             tokenMap.add("userId" , signInId);
@@ -92,20 +84,27 @@ public class UserController {
 
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
-            //ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
+            ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
            /* Cookie cookie1 = new Cookie("refreshTokenKey",result.getRefreshTokenKey());
             cookie1.setPath("/");
             cookie1.setMaxAge(60*60*1);
             cookie1.setHttpOnly(false);*/
+
             //cookie1.setSecure(true);
-           // cookie = responseCookie.toString();
-            CookieGenerator cg = new CookieGenerator();
+
+            cookie = responseCookie.toString();
+
+            /*CookieGenerator cg = new CookieGenerator();
             cg.setCookieName("refreshTokenKey");
             cg.addCookie(response,result.getRefreshTokenKey());
             System.out.println(cg.toString());
+            for (Cookie c:cookies) {
+                System.out.println("c : " + c.getName());
+            }*/
+
             //response.addCookie(cookie1);
 
-           // response.addHeader("Set-Cookie",cookie.toString());
+            response.addHeader("Set-Cookie",cookie.toString());
             if(result != null) {
                 map.putAll(com.inputMap(true,"로그인 성공",result.getAccessToken()));
             }else{
@@ -167,7 +166,6 @@ public class UserController {
     @PostMapping("/searchId")
     public ResponseEntity<?> searchByUserId(@RequestParam String id){
 
-        //return new ResponseEntity<>(userService.findByUserIdReturnUser(id), HttpStatus.OK); //200
         return new ResponseEntity<>(userService.findByUserIdReturnUser(id).getUserId(), HttpStatus.OK); //200
     }
 

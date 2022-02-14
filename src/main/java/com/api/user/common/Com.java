@@ -27,10 +27,10 @@ public class Com {
         ResponseCookie cookie =ResponseCookie.from("refreshKey", refreshKey)
                                     //.httpOnly(true)
                                     //.secure(true)
-                .maxAge(60*60*1)
+                                    .maxAge(60*60*24)
                                     .path("/")
                                     .sameSite("Lax")
-                .domain(".app.localhost")
+                                    .domain("localhost")
                                     .build();
         return cookie;
     }
