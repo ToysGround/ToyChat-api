@@ -5,6 +5,9 @@ import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -79,12 +82,16 @@ public class UserService {
     }
 
     public TokenDto issueToken(HttpServletRequest request, Map map){
-        RestTemplate restTemplate = new RestTemplate();
-
         MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
         tokenMap.setAll(map);
         tokenMap.add("accessToken" , request.getHeader("Authorization").split(" ")[1]);
-        TokenDto result = restTemplate.postForObject(URL_LOCAL+"refresh", tokenMap, TokenDto.class) ;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<?> entity = new HttpEntity<>(tokenMap,headers);
+
+        TokenDto result = restTemplate.postForObject(URL_LOCAL+"refresh", entity, TokenDto.class) ;
         System.out.println(result);
         return result;
     }

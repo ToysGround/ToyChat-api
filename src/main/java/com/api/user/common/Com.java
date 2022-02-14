@@ -3,7 +3,6 @@ package com.api.user.common;
 import com.api.user.controller.dto.ResponseDto;
 import org.springframework.http.ResponseCookie;
 
-import javax.servlet.http.Cookie;
 import java.util.HashMap;
 
 public class Com {
@@ -25,7 +24,7 @@ public class Com {
 
     public static ResponseCookie createCookie(String refreshKey){
         ResponseCookie cookie =ResponseCookie.from("refreshKey", refreshKey)
-                                    .httpOnly(true)
+                                    //.httpOnly(true)
                                     //.secure(true)
                                     .maxAge(60*60*24)
                                     .path("/")
