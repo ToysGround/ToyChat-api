@@ -84,7 +84,7 @@ public class UserService {
         MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
         tokenMap.setAll(map);
         tokenMap.add("accessToken" , request.getHeader("Authorization").split(" ")[1]);
-        TokenDto result = restTemplate.postForObject(URL_LOCAL+"vaild", tokenMap, TokenDto.class) ;
+        TokenDto result = restTemplate.postForObject(URL_LOCAL+"refresh", tokenMap, TokenDto.class) ;
         System.out.println(result);
         return result;
     }
