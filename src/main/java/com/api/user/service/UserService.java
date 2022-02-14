@@ -11,7 +11,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -75,4 +77,17 @@ public class UserService {
         System.out.println(result);
         return result;
     }
+
+    public TokenDto issueToken(HttpServletRequest request, Map map){
+        RestTemplate restTemplate = new RestTemplate();
+
+        MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+        tokenMap.setAll(map);
+        tokenMap.add("accessToken" , request.getHeader("Authorization").split(" ")[1]);
+        TokenDto result = restTemplate.postForObject(URL_LOCAL+"vaild", tokenMap, TokenDto.class) ;
+        System.out.println(result);
+        return result;
+    }
+
+
 }

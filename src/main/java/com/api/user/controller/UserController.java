@@ -11,9 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.CookieGenerator;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -139,12 +137,25 @@ public class UserController {
 
     @GetMapping("/vaildToken")
     public ResponseEntity<?> vaildUser(HttpServletRequest request){
-        String token = request.getHeader("Authorization");
         HashMap<String, Object> map = new HashMap<>();
-        if(userService.vaildUser(token)){map.putAll(com.inputMap(userService.vaildUser(token),"사용 가능한 TOKEN 입니다.",token));}
-        else map.putAll(com.inputMap(userService.vaildUser(token),"사용할 수 없는 TOKEN 입니다.",token));
+        String text = request.getHeader("Authorization");
+        String token = text.split(" ")[1];
+
+        if(userService.vaildUser(token)){
+            map.putAll(com.inputMap(userService.vaildUser(token),"사용 가능한 TOKEN 입니다.",token));
+        }else {
+            map.putAll(com.inputMap(userService.vaildUser(token),"사용할 수 없는 TOKEN 입니다.",token));
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED); //401
+        }
 
         return new ResponseEntity<>(map, HttpStatus.OK); //200
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody Map map, HttpServletRequest request){
+        //REFRESH TOKEN 재발급하여 리턴
+        TokenDto tokenDto = userService.issueToken(request, map);
+        return new ResponseEntity<>(Com.inputMap(true,"TOKEN 발급 성공.",tokenDto.getAccessToken()), HttpStatus.OK); //200
     }
 
 }
