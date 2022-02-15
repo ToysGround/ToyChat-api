@@ -108,9 +108,12 @@ public class UserService {
     public boolean checkRefreshToken(String refreshTokenKey){
         RestTemplate restTemplate = new RestTemplate();
         MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<?> entity = new HttpEntity<>(tokenMap,headers);
 
         tokenMap.add("refreshTokenKey", refreshTokenKey);
-        boolean result = restTemplate.postForObject(URL_LOCAL+"checkRefresh", tokenMap, boolean.class) ;
+        boolean result = restTemplate.postForObject(URL_LOCAL+"checkRefresh", entity, boolean.class) ;
 
         return result;
     }
