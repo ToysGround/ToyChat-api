@@ -158,4 +158,17 @@ public class UserController {
         return new ResponseEntity<>(Com.inputMap(true,"TOKEN 발급 성공.",tokenDto.getAccessToken()), HttpStatus.OK); //200
     }
 
+    @GetMapping("/signOut")
+    public ResponseEntity<?> signOut(@RequestBody Map reMap){
+        HashMap<String, Object> map = new HashMap<>();
+        boolean check = userService.signOut(reMap);
+        if(check){
+            map.putAll(com.inputMap(check,"로그아웃 성공",reMap.get("userId")));
+        }else{
+            map.putAll(com.inputMap(check,"로그아웃 실패",reMap.get("userId")));
+        }
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
 }

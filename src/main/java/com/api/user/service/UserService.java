@@ -83,8 +83,9 @@ public class UserService {
 
     public TokenDto issueToken(HttpServletRequest request, Map map){
         MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+        String accessToken = request.getHeader("Authorization").split(" ")[1];
         tokenMap.setAll(map);
-        tokenMap.add("accessToken" , request.getHeader("Authorization").split(" ")[1]);
+        tokenMap.add("accessToken" , accessToken);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -96,5 +97,13 @@ public class UserService {
         return result;
     }
 
+    public boolean signOut(Map map){
+        RestTemplate restTemplate = new RestTemplate();
+
+        MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+        tokenMap.setAll(map);
+        boolean result = restTemplate.postForObject(URL_LOCAL+"vaild", tokenMap, boolean.class) ;
+        return result;
+    }
 
 }
