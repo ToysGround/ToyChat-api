@@ -46,6 +46,7 @@ public class UserController {
         String cookie = "";
         try {
             String signInId = param.get("userId").toString();
+
             String signInPwd = param.get("userPwd").toString();
             String singInGBNo = param.get("serviceNo").toString();
             UserTb userEntity = userService.findByUserIdReturnUser(signInId);
@@ -70,6 +71,10 @@ public class UserController {
 
             System.out.println(result);
             /////////////////////////////////////////////////////////////////////////////////
+            if(!userService.checkRefreshToken(result.getRefreshTokenKey())){
+                map.putAll(com.inputMap(false,"중복된 TOKEN이 있습니다.",signInId));
+                return new ResponseEntity<>(map, HttpStatus.OK); //200
+            }
             ResponseCookie responseCookie = Com.createCookie(result.getRefreshTokenKey());
             cookie = responseCookie.toString();
 

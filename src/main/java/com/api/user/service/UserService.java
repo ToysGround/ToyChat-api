@@ -99,10 +99,19 @@ public class UserService {
 
     public boolean signOut(Map map){
         RestTemplate restTemplate = new RestTemplate();
-
         MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
         tokenMap.setAll(map);
-        boolean result = restTemplate.postForObject(URL_LOCAL+"vaild", tokenMap, boolean.class) ;
+        boolean result = restTemplate.postForObject(URL_LOCAL+"signOut", tokenMap, boolean.class) ;
+        return result;
+    }
+
+    public boolean checkRefreshToken(String refreshTokenKey){
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, String> tokenMap = new LinkedMultiValueMap<String,String>();
+
+        tokenMap.add("refreshTokenKey", refreshTokenKey);
+        boolean result = restTemplate.postForObject(URL_LOCAL+"checkRefresh", tokenMap, boolean.class) ;
+
         return result;
     }
 
