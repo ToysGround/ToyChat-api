@@ -12,4 +12,7 @@ public interface UserRepository extends JpaRepository<UserTb, Long>{
     @Query("select u from UserTb u where u.userId = :target")
     UserTb findByUserId(@Param("target") String userId);
 
+    @Query("select u.id, u.userId, u.userMsg, u.userImage from UserTb u where u.userId = :target")
+    UserTb findByUserIdVaild(@Param("target") String userId);
+
 }

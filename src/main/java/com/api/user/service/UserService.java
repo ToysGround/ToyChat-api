@@ -2,7 +2,9 @@ package com.api.user.service;
 
 
 import com.api.user.controller.dto.TokenDto;
+import com.api.user.domain.entity.FriendTb;
 import com.api.user.domain.entity.UserTb;
+import com.api.user.domain.repository.FriendRepository;
 import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class UserService {
 
     private  final UserRepository userRepository;
+    private  final FriendRepository friendRepository;
     final String URL_LOCAL = "http://localhost:8081/jwt/";
 
     @Transactional
@@ -58,7 +61,6 @@ public class UserService {
         return "ok";
     }
 
-
     @Transactional(readOnly = true)
     public boolean findByUserId(String userId){
         UserTb userEntity = userRepository.findByUserId(userId);
@@ -70,6 +72,9 @@ public class UserService {
     public UserTb findByUserIdReturnUser(String userId){
         return userRepository.findByUserId(userId);
     }
+
+    @Transactional(readOnly = true)
+    public UserTb findByUserIdVaild(String userId){  return userRepository.findByUserIdVaild(userId); }
 
     public boolean vaildUser(String token){
         RestTemplate restTemplate = new RestTemplate();
@@ -116,6 +121,12 @@ public class UserService {
         boolean result = restTemplate.postForObject(URL_LOCAL+"checkRefresh", entity, boolean.class) ;
 
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    public FriendTb friendList(long sq){
+        return friendRepository.findById(sq)
+                .orElseThrow(()->new IllegalArgumentException("회원번호를 확인해주세요"));
     }
 
 }

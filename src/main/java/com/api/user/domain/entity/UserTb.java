@@ -16,7 +16,7 @@ public class UserTb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_SQ", nullable = false)
-    private long id;
+    private long userSq;
 
     @Column(name = "USER_ID")
     private String userId;
@@ -36,6 +36,12 @@ public class UserTb {
 
     @Column(name = "USER_BIRTH")
     private String userBirth;
+
+    @Column(name = "USER_MSG")
+    private String userMsg;
+
+    @Column(name = "USER_IMAGE")
+    private String userImage;
 
     @Column(name = "USER_ST")
     //@Enumerated(EnumType.ORDINAL)

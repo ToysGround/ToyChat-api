@@ -1,8 +1,10 @@
 package com.api.user.controller;
 
 import com.api.user.common.Com;
+import com.api.user.controller.dto.ResponseDto;
 import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
+import com.api.user.service.ChatService;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -147,6 +149,7 @@ public class UserController {
         String token = text.split(" ")[1];
 
         if(userService.vaildUser(token)){
+            //userService.findByUserIdVaild() id 같이받을가?
             map.putAll(com.inputMap(userService.vaildUser(token),"사용 가능한 TOKEN 입니다.",token));
         }else {
             map.putAll(com.inputMap(userService.vaildUser(token),"사용할 수 없는 TOKEN 입니다.",token));
@@ -174,6 +177,12 @@ public class UserController {
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/friendList")
+    public ResponseEntity<?> friendList(@RequestParam long uesrSq){
+        ResponseDto responseDto = Com.createResponseDto(true,"친구목록 조회 성공",userService.friendList(uesrSq));
+        return  new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 }
