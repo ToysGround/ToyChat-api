@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -124,9 +125,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public FriendTb friendList(long sq){
-        return friendRepository.findById(sq)
+    public List<UserTb> friendList(long sq){
+        List<Long> friendTb = friendRepository.findByUserSqList(sq)
                 .orElseThrow(()->new IllegalArgumentException("회원번호를 확인해주세요"));
+        return  userRepository.findByUserIdFriends(friendTb);
     }
 
 }
