@@ -15,14 +15,14 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
 
     private final SimpMessagingTemplate template ;
-    @MessageMapping(value = "/chat/enter")
+    @MessageMapping(value = "/enter")
     public void enter(String message){
         log.info("message :: " + message);
         template.convertAndSend("/sub/enter", message);
        // return message + "dsadsads";
     }
 
-    @MessageMapping(value = "/chat/message")
+    @MessageMapping(value = "/message")
     @SendTo("/sub/message")
     public String message(String message) throws Exception{
         log.info("message :: " + message);
