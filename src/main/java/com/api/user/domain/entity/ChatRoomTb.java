@@ -19,7 +19,7 @@ public class ChatRoomTb {
     private long roomSq;
     @Basic
     @Column(name = "ROOM_NM")
-    private Integer roomNm;
+    private String roomNm;
     @Basic
     @Column(name = "REG_DT")
     private Timestamp regDt;

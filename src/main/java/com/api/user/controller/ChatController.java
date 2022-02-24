@@ -1,15 +1,35 @@
 package com.api.user.controller;
 
-import com.api.user.domain.repository.UserRepository;
+import com.api.user.domain.entity.ChatMessageTb;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 
+@Controller
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/user")
+@Log4j2
 public class ChatController {
 
-    private  final UserRepository userRepository;
+    private final SimpMessagingTemplate template ;
+    @MessageMapping(value = "/chat/enter")
+    public void enter(String message){
+        log.info("message :: " + message);
+        template.convertAndSend("/sub/chat/room/1",message);
+       // return message + "dsadsads";
+    }
+    /*
+    @MessageMapping(value = "/chat/enter")
+    public void enter(ChatMessageTb message){
+        message.setChatMsg("dsa");
+        template.convertAndSend("/sub/chat/room" + message.getRoomSq(),message);
 
+    }
+
+    @MessageMapping(value = "/chat/message")
+    public void message(ChatMessageTb message){
+        template.convertAndSend("/sub/chat/room" + message.getRoomSq(), message);
+    }
+*/
 }
