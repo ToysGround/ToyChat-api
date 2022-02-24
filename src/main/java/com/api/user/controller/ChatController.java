@@ -16,15 +16,15 @@ public class ChatController {
 
     private final SimpMessagingTemplate template ;
     @MessageMapping(value = "/chat/enter")
-    public void enter(ChatDto message){
+    public void enter(String message){
         log.info("message :: " + message);
-        template.convertAndSend("/sub/chat/room/1",message);
+        template.convertAndSend("/sub/enter", message);
        // return message + "dsadsads";
     }
 
     @MessageMapping(value = "/chat/message")
     @SendTo("/sub/message")
-    public String message(String message){
+    public String message(String message) throws Exception{
         log.info("message :: " + message);
         return message;
     }
