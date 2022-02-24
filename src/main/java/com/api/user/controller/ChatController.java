@@ -1,5 +1,6 @@
 package com.api.user.controller;
 
+import com.api.user.controller.dto.ChatDto;
 import com.api.user.domain.entity.ChatMessageTb;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,7 +15,7 @@ public class ChatController {
 
     private final SimpMessagingTemplate template ;
     @MessageMapping(value = "/chat/enter")
-    public void enter(String message){
+    public void enter(ChatDto message){
         log.info("message :: " + message);
         template.convertAndSend("/sub/chat/room/1",message);
        // return message + "dsadsads";
@@ -29,7 +30,8 @@ public class ChatController {
 
     @MessageMapping(value = "/chat/message")
     public void message(ChatMessageTb message){
-        template.convertAndSend("/sub/chat/room" + message.getRoomSq(), message);
+        template.convertAndSend("/sub/chat/room/1" , message);
     }
-*/
+    */
+
 }
