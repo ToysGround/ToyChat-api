@@ -194,8 +194,9 @@ public class UserService {
         }
     }
 
-    public UserTb profileMsg(Map map){
-        return userRepository.updateUserMsg(String.valueOf(map.get("userSq")),String.valueOf(map.get("userMsg")));
+    @Transactional()
+    public int profileMsg(long userSq, String userMsg){
+        return userRepository.updateUserMsg(userSq,userMsg);
     }
 
 }

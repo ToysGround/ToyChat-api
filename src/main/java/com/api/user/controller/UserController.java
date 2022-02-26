@@ -6,6 +6,7 @@ import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Fetch;
 import org.springframework.http.*;
 
 import org.springframework.util.LinkedMultiValueMap;
@@ -192,7 +193,7 @@ public class UserController {
         return  new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/profile/image")
+    @PatchMapping("/profile/image")
     public ResponseEntity<?> profileImage(@RequestPart(value = "file") MultipartFile files,@RequestPart(value = "userSq") long userSq) throws IOException {
         return new ResponseEntity<>(Com.createResponseDto(true,
                                                     "친구목록 조회 성공",
@@ -200,11 +201,23 @@ public class UserController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/profile/msg")
-    public ResponseEntity<?> profileMsg(@RequestBody Map map) {
-
-        return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",userService.profileMsg(map))
+    @PatchMapping(value = "/profile/msg")
+    public ResponseEntity<?> profileMsg(@RequestBody Map map, HttpServletRequest request) {
+        String text = request.getHeader("Authorization");
+        String token = text.split(" ")[1];
+        if(!userService.vaildUser(token)){
+            return new ResponseEntity<>(Com.createResponseDto(false,"토큰검증실패","")
+                    , HttpStatus.OK);
+        }
+        int val = userService.profileMsg(Long.parseLong(map.get("userSq").toString()),String.valueOf(map.get("userMsg")));
+        if(val>0){
+            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
                 , HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
+                , HttpStatus.OK);
+        }
+
     }
 
 }

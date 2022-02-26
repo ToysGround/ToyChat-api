@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @AllArgsConstructor
 @NoArgsConstructor
