@@ -12,10 +12,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -146,12 +148,15 @@ public class UserController {
         HashMap<String, Object> map = new HashMap<>();
         String text = request.getHeader("Authorization");
         String token = text.split(" ")[1];
-
-        if(userService.vaildUser(token)){
-            //userService.findByUserIdVaild() id 같이받을가?
-            map.putAll(com.inputMap(userService.vaildUser(token),"사용 가능한 TOKEN 입니다.",token));
+        boolean vaildToken = userService.vaildUser(token);
+        if(vaildToken){
+            map.putAll(com.inputMap(vaildToken,
+                    "사용 가능한 TOKEN 입니다.",
+                    userService.findByUserIdVaild(userService.findUserByToken(token))
+                    )
+            );
         }else {
-            map.putAll(com.inputMap(userService.vaildUser(token),"사용할 수 없는 TOKEN 입니다.",token));
+            map.putAll(com.inputMap(vaildToken,"사용할 수 없는 TOKEN 입니다.",token));
             return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED); //401
         }
 
@@ -182,6 +187,12 @@ public class UserController {
     public ResponseEntity<?> friendList(@RequestParam long uesrSq){
         ResponseDto responseDto = Com.createResponseDto(true,"친구목록 조회 성공",userService.friendList(uesrSq));
         return  new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/file/upload")
+    public ResponseEntity<?> upload(@RequestPart MultipartFile files,@RequestParam long userSq) throws IOException {
+        userService.fileUpload(files,userSq);
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 
 }
