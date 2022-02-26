@@ -3,9 +3,11 @@ package com.api.user.service;
 
 import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserImageTb;
+import com.api.user.domain.entity.UserProfileImageTbEntity;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.domain.repository.FriendRepository;
 import com.api.user.domain.repository.UserImageRepository;
+import com.api.user.domain.repository.UserProfileImageRepository;
 import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -32,7 +34,7 @@ public class UserService {
 
     private  final UserRepository userRepository;
     private  final FriendRepository friendRepository;
-    private  final UserImageRepository userImageRepository;
+    private  final UserProfileImageRepository userProfileImageRepository;
     final String URL_LOCAL = "http://localhost:8081/jwt/";
 
     @Transactional
@@ -148,13 +150,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public void fileUpload(MultipartFile files, long userSq) throws IOException {
-        UserImageTb imageTb = new UserImageTb() ;
+    public UserProfileImageTbEntity profileImage(MultipartFile files, long userSq) throws IOException {
+        UserProfileImageTbEntity imageTb = new UserProfileImageTbEntity();
         int imgNum = 0;
 
-        if(!userImageRepository.findById(userSq).isEmpty()){
-            imageTb = userImageRepository.findById(userSq).get();
+        if(!userProfileImageRepository.findById(userSq).isEmpty()){
+            imageTb = userProfileImageRepository.findById(userSq).get();
         }
+        long id = imageTb.getUserSq();
 
         String sourceFileName = files.getOriginalFilename();
         String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
@@ -162,6 +165,7 @@ public class UserService {
 
         File destinationFile;
         String destinationFileName;
+        //파일경로 환경 맞춰야함
         String filePath = "C:\\Users\\Jin\\IdeaProjects\\ToyChat\\src\\main\\java\\com\\api\\user\\image";
 
         do {
@@ -170,13 +174,18 @@ public class UserService {
             destinationFile = new File(filePath + destinationFileName);
         }while (destinationFile.exists());
 
-        destinationFile.getParentFile().mkdirs();
-        files.transferTo(destinationFile);
+        if(id == 0){
+            imageTb.setFileName(destinationFileName);
+            imageTb.setOriginalName(sourceFileName);
+            imageTb.setFileUrl(filePath);
+            return userProfileImageRepository.save(imageTb);
+        }else{
+            return userProfileImageRepository.updateImage(id,destinationFileName,sourceFileName,filePath);
+        }
+    }
 
-        imgNum = Integer.valueOf(imageTb.getImageNum())+1;
-
-        imageTb.setImageNum(Integer.toString(imgNum));
-        //imageTb.setImage1();
+    public UserTb profileMsg(Map map){
+        return userRepository.updateUserMsg(String.valueOf(map.get("userSq")),String.valueOf(map.get("userMsg")));
     }
 
 }

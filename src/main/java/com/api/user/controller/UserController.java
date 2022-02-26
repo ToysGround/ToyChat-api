@@ -167,7 +167,10 @@ public class UserController {
     public ResponseEntity<?> refresh(@RequestBody Map map, HttpServletRequest request){
         //REFRESH TOKEN 재발급하여 리턴
         TokenDto tokenDto = userService.issueToken(request, map);
-        return new ResponseEntity<>(Com.inputMap(true,"TOKEN 발급 성공.",tokenDto.getAccessToken()), HttpStatus.OK); //200
+        return new ResponseEntity<>(Com.inputMap(true,
+                                                "TOKEN 발급 성공.",
+                                                         tokenDto.getAccessToken())
+                                     , HttpStatus.OK); //200
     }
 
     @GetMapping("/signOut")
@@ -189,10 +192,19 @@ public class UserController {
         return  new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PostMapping("/file/upload")
-    public ResponseEntity<?> upload(@RequestPart MultipartFile files,@RequestParam long userSq) throws IOException {
-        userService.fileUpload(files,userSq);
-        return new ResponseEntity<>("", HttpStatus.OK);
+    @PostMapping("/profile/image")
+    public ResponseEntity<?> profileImage(@RequestPart(value = "file") MultipartFile files,@RequestPart(value = "userSq") long userSq) throws IOException {
+        return new ResponseEntity<>(Com.createResponseDto(true,
+                                                    "친구목록 조회 성공",
+                                                        userService.profileImage(files,userSq)),
+                HttpStatus.OK);
+    }
+
+    @PostMapping("/profile/msg")
+    public ResponseEntity<?> profileMsg(@RequestBody Map map) {
+
+        return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",userService.profileMsg(map))
+                , HttpStatus.OK);
     }
 
 }

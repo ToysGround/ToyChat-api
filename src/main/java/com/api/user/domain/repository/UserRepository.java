@@ -21,4 +21,7 @@ public interface UserRepository extends JpaRepository<UserTb, Long>{
     @Query("select u.userSq, u.userId, u.userNm,u.userMsg, u.userImage from UserTb u where u.userId in (:target)")
     List<UserTb> findByUserIdFriends(@Param("target") List<Long> userId);
 
+    @Query("update UserTb u set u.userMsg = :value where u.userSq = :target")
+    UserTb updateUserMsg(@Param("target") String userSq, @Param("value") String userMsg);
+
 }
