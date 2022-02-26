@@ -209,7 +209,7 @@ public class UserController {
             return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
                 , HttpStatus.OK);
         }else{
-            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
+            return new ResponseEntity<>(Com.createResponseDto(false,"상태명 변경 실패",val)
                 , HttpStatus.OK);
         }
 
@@ -220,10 +220,10 @@ public class UserController {
         vaildToken(request);
         int val = userService.profileMsg(Long.parseLong(map.get("userSq").toString()),String.valueOf(map.get("userNm")));
         if(val>0){
-            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
+            return new ResponseEntity<>(Com.createResponseDto(true,"이름 변경 완료",val)
                     , HttpStatus.OK);
         }else{
-            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
+            return new ResponseEntity<>(Com.createResponseDto(false,"이름 변경 실패",val)
                     , HttpStatus.OK);
         }
 
