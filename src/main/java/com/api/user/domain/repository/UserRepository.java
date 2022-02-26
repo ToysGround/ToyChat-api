@@ -27,4 +27,9 @@ public interface UserRepository extends JpaRepository<UserTb, Long>{
     @Query("update UserTb u set u.userMsg = :value where u.userSq = :target")
     int updateUserMsg(@Param("target") long userSq, @Param("value") String userMsg);
 
+    @Modifying
+    @Query("update UserTb u set u.userNm = :value where u.userSq = :target")
+    int updateUserName(@Param("target") long userSq, @Param("value") String userNm);
+
+
 }

@@ -203,13 +203,8 @@ public class UserController {
 
     @PatchMapping(value = "/profile/msg")
     public ResponseEntity<?> profileMsg(@RequestBody Map map, HttpServletRequest request) {
-        String text = request.getHeader("Authorization");
-        String token = text.split(" ")[1];
-        if(!userService.vaildUser(token)){
-            return new ResponseEntity<>(Com.createResponseDto(false,"토큰검증실패","")
-                    , HttpStatus.OK);
-        }
-        int val = userService.profileMsg(Long.parseLong(map.get("userSq").toString()),String.valueOf(map.get("userMsg")));
+        vaildToken(request);
+        int val = userService.profileMsg(Long.valueOf(map.get("userSq").toString()),String.valueOf(map.get("userMsg")));
         if(val>0){
             return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
                 , HttpStatus.OK);
@@ -218,6 +213,32 @@ public class UserController {
                 , HttpStatus.OK);
         }
 
+    }
+
+    @PatchMapping(value = "/profile/name")
+    public ResponseEntity<?> profileName(@RequestBody Map map, HttpServletRequest request) {
+        vaildToken(request);
+        int val = userService.profileMsg(Long.parseLong(map.get("userSq").toString()),String.valueOf(map.get("userNm")));
+        if(val>0){
+            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
+                    , HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(Com.createResponseDto(true,"상태명 변경 완료",val)
+                    , HttpStatus.OK);
+        }
+
+    }
+
+    public ResponseEntity<?> vaildToken(HttpServletRequest request){
+        String text = request.getHeader("Authorization");
+        String token = text.split(" ")[1];
+
+        if(!userService.vaildUser(token)){
+            return new ResponseEntity<>(Com.createResponseDto(false,"사용할 수 없는 TOKEN 입니다.","")
+                    , HttpStatus.UNAUTHORIZED);
+        }else{
+            return null;
+        }
     }
 
 }

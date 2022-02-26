@@ -2,10 +2,10 @@ package com.api.user.common;
 
 import com.api.user.controller.dto.ResponseDto;
 import org.springframework.http.ResponseCookie;
-
 import java.util.HashMap;
 
 public class Com {
+
     public static ResponseDto createResponseDto(boolean success, String message, Object data){
         return ResponseDto.builder()
                 .success(success)
@@ -33,4 +33,5 @@ public class Com {
                                     .build();
         return cookie;
     }
+
 }

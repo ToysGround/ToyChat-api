@@ -199,4 +199,10 @@ public class UserService {
         return userRepository.updateUserMsg(userSq,userMsg);
     }
 
+    @Transactional()
+    public int profileName(long userSq, String userNm){
+        return userRepository.updateUserName(userSq,userNm);
+    }
+
+
 }
