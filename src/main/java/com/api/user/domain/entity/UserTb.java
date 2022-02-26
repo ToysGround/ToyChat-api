@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -32,10 +33,10 @@ public class UserTb {
     private String userSex;
 
     @Column(name = "USER_HP")
-    private String userHp;
+    private int userHp;
 
     @Column(name = "USER_BIRTH")
-    private String userBirth;
+    private int userBirth;
 
     @Column(name = "USER_MSG")
     private String userMsg;
@@ -52,6 +53,6 @@ public class UserTb {
     private String userGb;
 
     @Column(name = "REG_DT")
-    private Instant regDt;
+    private Timestamp regDt;
 
 }

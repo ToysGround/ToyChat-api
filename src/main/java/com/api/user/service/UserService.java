@@ -2,6 +2,7 @@ package com.api.user.service;
 
 
 import com.api.user.controller.dto.TokenDto;
+import com.api.user.controller.dto.UserDto;
 import com.api.user.domain.entity.UserImageTb;
 import com.api.user.domain.entity.UserProfileImageTbEntity;
 import com.api.user.domain.entity.UserTb;
@@ -82,8 +83,17 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
-    @Transactional(readOnly = false)
-    public UserTb findByUserIdVaild(String userId){  return userRepository.findByUserIdVaild(userId); }
+    @Transactional(readOnly = true)
+    public UserDto findByUserIdVaild(String userId){
+        UserTb userTb =userRepository.findByUserId(userId);
+        return  UserDto.builder()
+                .userSq(userTb.getUserSq())
+                .userId(userTb.getUserId())
+                .userNm(userTb.getUserNm())
+                .userMsg(userTb.getUserMsg())
+                .userImage(userTb.getUserImage())
+                .build();
+    }
 
     public boolean vaildUser(String token){
         RestTemplate restTemplate = new RestTemplate();
