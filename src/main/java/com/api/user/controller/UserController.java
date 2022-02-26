@@ -214,7 +214,7 @@ public class UserController {
         }
 
     }
-
+//ㅇㄴㅁㅇㅁㄴㅇ
     @PatchMapping(value = "/profile/name")
     public ResponseEntity<?> profileName(@RequestBody Map map, HttpServletRequest request) {
         vaildToken(request);
