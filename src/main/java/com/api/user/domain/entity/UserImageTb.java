@@ -19,7 +19,7 @@ public class UserImageTb {
     private int userSq;
     @Basic
     @Column(name = "IMAGE_NUM")
-    private Integer imageNum;
+    private String imageNum;
     @Basic
     @Column(name = "IMAGE_1")
     private byte[] image1;

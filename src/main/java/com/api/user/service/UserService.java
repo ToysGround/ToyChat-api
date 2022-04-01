@@ -3,6 +3,7 @@ package com.api.user.service;
 
 import com.api.user.controller.dto.TokenDto;
 import com.api.user.controller.dto.UserDto;
+import com.api.user.domain.entity.FriendTb;
 import com.api.user.domain.entity.UserImageTb;
 import com.api.user.domain.entity.UserProfileImageTbEntity;
 import com.api.user.domain.entity.UserTb;
@@ -13,6 +14,7 @@ import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,10 +26,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -194,6 +199,73 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = false)
+    public String profileImage2(MultipartFile files, long userSq) throws Exception {
+
+        String imageUrl = files.getOriginalFilename();
+        String result = "";
+
+        String filePathName = files.getOriginalFilename();
+        String fileExtName  = FilenameUtils.getExtension(filePathName).toLowerCase();
+
+        if( imageUrl.length() > 0 )
+        {
+            int imageUrlLength = imageUrl.length();
+            String[] imageString = new String[ imageUrlLength ];
+            for( int i = 0; i < imageUrlLength; i++ )
+            {
+
+                FileInputStream inputStream = null;
+                ByteArrayOutputStream byteOutStream = null;
+                try
+                {
+                    File file = new File( filePathName );
+                    if( file.exists() )
+                    {
+                        inputStream = new FileInputStream( file );
+                        byteOutStream = new ByteArrayOutputStream();
+                        int len = 0;
+                        byte[] buf = new byte[1024];
+                        while( (len = inputStream.read( buf )) != -1 ) {
+                            byteOutStream.write(buf, 0, len);
+                        }
+                        byte[] fileArray = byteOutStream.toByteArray();
+                        imageString[i] = new String( Base64.encodeBase64( fileArray ) );
+//                        String changeString = "data:image/" + fileExtName + ";base64, " + imageString;
+//                        content = content.replace(imageUrl[i], changeString);
+                        result = imageString[i];
+                    }
+                }
+                catch( IOException e)
+                {
+                    e.printStackTrace();
+                }
+                finally
+                {
+                    //inputStream.close();
+                  //  byteOutStream.close();
+                }
+            }
+        }
+        UserProfileImageTbEntity imageTb = new UserProfileImageTbEntity();
+        if(!userProfileImageRepository.findById(userSq).isEmpty()){
+            imageTb = userProfileImageRepository.findById(userSq).get();
+        }
+        long id = imageTb.getUserSq();
+
+        if(id == 0){
+            imageTb.setUserSq(userSq);
+            imageTb.setFileName("");
+            imageTb.setOriginalName(filePathName);
+            imageTb.setFileUrl("");
+            userProfileImageRepository.save(imageTb);
+        }else{
+            userProfileImageRepository.updateImage(id,"",filePathName,"");
+        }
+
+        return result;
+    }
+
     @Transactional()
     public int profileMsg(long userSq, String userMsg){
         return userRepository.updateUserMsg(userSq,userMsg);
@@ -203,6 +275,28 @@ public class UserService {
     public int profileName(long userSq, String userNm){
         return userRepository.updateUserName(userSq,userNm);
     }
+
+    @Transactional(readOnly = true)
+    public UserDto findByUserIdUserInfo(long userSq){
+        Optional<UserTb> userTb = userRepository.findById(userSq);
+        return  UserDto.builder()
+                .userSq(userTb.get().getUserSq())
+                .userId(userTb.get().getUserId())
+                .userNm(userTb.get().getUserNm())
+                .userMsg(userTb.get().getUserMsg())
+                .userImage(userTb.get().getUserImage())
+                .build();
+    }
+
+    @Transactional(readOnly = false)
+    public void insertUserFriendByuserSq(long fromSq, long toSq){
+        FriendTb friendTb = new FriendTb();
+        friendTb.setUserSq(fromSq);
+        friendTb.setToUserSq(toSq);
+        friendRepository.save(friendTb);
+    }
+
+
 
 
 }

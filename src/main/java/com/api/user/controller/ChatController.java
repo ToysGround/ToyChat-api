@@ -21,13 +21,14 @@ public class ChatController {
         template.convertAndSend("/sub/enter", message);
        // return message + "dsadsads";
     }
-
+/*
     @MessageMapping(value = "/message")
     @SendTo("/sub/message")
     public String message(String message) throws Exception{
         log.info("message :: " + message);
         return message;
     }
+    */
     /*
     @MessageMapping(value = "/chat/enter")
     public void enter(ChatMessageTb message){

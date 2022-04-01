@@ -15,7 +15,7 @@ public class UserProfileImageTbEntity {
     @Basic
     @Id
     @Column(name = "USER_SQ")
-    private int userSq;
+    private long userSq;
     @Basic
     @Column(name = "ORIGINAL_NAME")
     private String originalName;
@@ -26,27 +26,5 @@ public class UserProfileImageTbEntity {
     @Column(name = "FILE_URL")
     private String fileUrl;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        UserProfileImageTbEntity that = (UserProfileImageTbEntity) o;
-
-        if (userSq != that.userSq) return false;
-        if (originalName != null ? !originalName.equals(that.originalName) : that.originalName != null) return false;
-        if (fileName != null ? !fileName.equals(that.fileName) : that.fileName != null) return false;
-        if (fileUrl != null ? !fileUrl.equals(that.fileUrl) : that.fileUrl != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = userSq;
-        result = 31 * result + (originalName != null ? originalName.hashCode() : 0);
-        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
-        result = 31 * result + (fileUrl != null ? fileUrl.hashCode() : 0);
-        return result;
-    }
 }

@@ -6,7 +6,6 @@ import com.api.user.controller.dto.TokenDto;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Fetch;
 import org.springframework.http.*;
 
 import org.springframework.util.LinkedMultiValueMap;
@@ -193,12 +192,12 @@ public class UserController {
         return  new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @PatchMapping("/profile/image")
-    public ResponseEntity<?> profileImage(@RequestPart(value = "file") MultipartFile files,@RequestPart(value = "userSq") long userSq) throws IOException {
-        return new ResponseEntity<>(Com.createResponseDto(true,
-                                                    "친구목록 조회 성공",
-                                                        userService.profileImage(files,userSq)),
-                HttpStatus.OK);
+    @PostMapping(value = "/profile/image", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> profileImage(@RequestPart(value = "file") MultipartFile files,@RequestPart(value = "userSq") long userSq) throws Exception {
+        return new ResponseEntity<>(Com.createResponseDto(true
+                                                        , "프로필 이미지 변경 성공"
+                                                        , userService.profileImage2(files,userSq))
+                                    , HttpStatus.OK);
     }
 
     @PatchMapping(value = "/profile/msg")
@@ -214,7 +213,7 @@ public class UserController {
         }
 
     }
-//ㅇㄴㅁㅇㅁㄴㅇ
+
     @PatchMapping(value = "/profile/name")
     public ResponseEntity<?> profileName(@RequestBody Map map, HttpServletRequest request) {
         vaildToken(request);
@@ -228,6 +227,39 @@ public class UserController {
         }
 
     }
+
+    @GetMapping("/userInfo")
+    public ResponseEntity<?> userInfo(@RequestParam long uesrSq,HttpServletRequest request){
+        vaildToken(request);
+        return new ResponseEntity<>(Com.createResponseDto(true,"유저정보조회",userService.findByUserIdUserInfo(uesrSq))
+                , HttpStatus.OK);
+    }
+
+    @GetMapping("/searchId")
+    public ResponseEntity<?> searchId(@RequestParam String userId,HttpServletRequest request){
+        vaildToken(request);
+        UserTb userTb = userService.findByUserIdReturnUser(userId);
+        HashMap<String,String> map = new HashMap<>();
+        if(userTb == null && userTb.getUserId() == ""){
+            return new ResponseEntity<>(Com.createResponseDto(true,"검색된 ID가 없습니다.","")
+                    , HttpStatus.OK);
+        }
+        map.put("userId",userTb.getUserId());
+        map.put("userSq",Long.toString(userTb.getUserSq()));
+        return new ResponseEntity<>(Com.createResponseDto(true,"유저 조회", map)
+                , HttpStatus.OK);
+    }
+
+
+    @GetMapping("/insertFriend")
+    public ResponseEntity<?> insertFriend(@RequestParam long fromSq,@RequestParam long toSq,HttpServletRequest request){
+        vaildToken(request);
+        userService.insertUserFriendByuserSq(fromSq,toSq);
+        return new ResponseEntity<>(Com.createResponseDto(true,"친구추가","")
+                , HttpStatus.OK);
+    }
+
+
 
     public ResponseEntity<?> vaildToken(HttpServletRequest request){
         String text = request.getHeader("Authorization");
