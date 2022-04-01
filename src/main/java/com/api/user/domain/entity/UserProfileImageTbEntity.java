@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Blob;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,9 +23,10 @@ public class UserProfileImageTbEntity {
     @Basic
     @Column(name = "FILE_NAME")
     private String fileName;
-    @Basic
-    @Column(name = "FILE_URL")
-    private String fileUrl;
+
+    @Lob
+    @Column(name = "FILE_DATA", columnDefinition = "BLOB")
+    private byte[] fileData;
 
 
 }

@@ -10,10 +10,10 @@ public interface UserProfileImageRepository extends JpaRepository<UserProfileIma
     @Query("update UserProfileImageTbEntity u " +
             "set u.fileName = :fileName, " +
                 "u.originalName = :originalName, " +
-                "u.fileUrl = :fileUrl " +
+                "u.fileData = :fileData " +
             "where u.userSq = :target")
     UserProfileImageTbEntity updateImage(@Param("target") long userSq,
                                          @Param("fileName") String fileName,
                                          @Param("originalName") String originalName,
-                                         @Param("fileUrl") String fileUrl);
+                                         @Param("fileData") String fileData);
 }

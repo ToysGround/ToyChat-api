@@ -12,6 +12,7 @@ import com.api.user.domain.repository.UserImageRepository;
 import com.api.user.domain.repository.UserProfileImageRepository;
 import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -166,6 +167,7 @@ public class UserService {
 
     @Transactional(readOnly = false)
     public UserProfileImageTbEntity profileImage(MultipartFile files, long userSq) throws IOException {
+
         UserProfileImageTbEntity imageTb = new UserProfileImageTbEntity();
         int imgNum = 0;
 
@@ -192,7 +194,7 @@ public class UserService {
         if(id == 0){
             imageTb.setFileName(destinationFileName);
             imageTb.setOriginalName(sourceFileName);
-            imageTb.setFileUrl(filePath);
+            //imageTb.setFileData();
             return userProfileImageRepository.save(imageTb);
         }else{
             return userProfileImageRepository.updateImage(id,destinationFileName,sourceFileName,filePath);
@@ -201,7 +203,10 @@ public class UserService {
 
     @Transactional(readOnly = false)
     public String profileImage2(MultipartFile files, long userSq) throws Exception {
-
+        System.out.println("##### :: " + files.getBytes());
+        String test = java.util.Base64.getEncoder().encodeToString(files.getBytes());
+        byte[] test2 = files.getBytes();
+        //System.out.println("#### :::::::: " + test);
         String imageUrl = files.getOriginalFilename();
         String result = "";
 
@@ -211,9 +216,7 @@ public class UserService {
         if( imageUrl.length() > 0 )
         {
             int imageUrlLength = imageUrl.length();
-            String[] imageString = new String[ imageUrlLength ];
-            for( int i = 0; i < imageUrlLength; i++ )
-            {
+            String imageString ;
 
                 FileInputStream inputStream = null;
                 ByteArrayOutputStream byteOutStream = null;
@@ -230,10 +233,10 @@ public class UserService {
                             byteOutStream.write(buf, 0, len);
                         }
                         byte[] fileArray = byteOutStream.toByteArray();
-                        imageString[i] = new String( Base64.encodeBase64( fileArray ) );
+                        imageString = new String( Base64.encodeBase64( fileArray ) );
 //                        String changeString = "data:image/" + fileExtName + ";base64, " + imageString;
 //                        content = content.replace(imageUrl[i], changeString);
-                        result = imageString[i];
+                        result = imageString;
                     }
                 }
                 catch( IOException e)
@@ -246,7 +249,7 @@ public class UserService {
                   //  byteOutStream.close();
                 }
             }
-        }
+       // FileUtils.readFileToByteArray(files);
         UserProfileImageTbEntity imageTb = new UserProfileImageTbEntity();
         if(!userProfileImageRepository.findById(userSq).isEmpty()){
             imageTb = userProfileImageRepository.findById(userSq).get();
@@ -257,12 +260,12 @@ public class UserService {
             imageTb.setUserSq(userSq);
             imageTb.setFileName("");
             imageTb.setOriginalName(filePathName);
-            imageTb.setFileUrl("");
+            imageTb.setFileData(test2);
             userProfileImageRepository.save(imageTb);
         }else{
             userProfileImageRepository.updateImage(id,"",filePathName,"");
         }
-
+         System.out.println("@@@@@@@@@@@@@@@@@@ : " + result);
         return result;
     }
 
