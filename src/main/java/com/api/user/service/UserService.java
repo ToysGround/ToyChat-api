@@ -4,15 +4,12 @@ package com.api.user.service;
 import com.api.user.controller.dto.TokenDto;
 import com.api.user.controller.dto.UserDto;
 import com.api.user.domain.entity.FriendTb;
-import com.api.user.domain.entity.UserImageTb;
 import com.api.user.domain.entity.UserProfileImageTbEntity;
 import com.api.user.domain.entity.UserTb;
 import com.api.user.domain.repository.FriendRepository;
-import com.api.user.domain.repository.UserImageRepository;
 import com.api.user.domain.repository.UserProfileImageRepository;
 import com.api.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -164,6 +161,8 @@ public class UserService {
                 .orElseThrow(()->new IllegalArgumentException("회원번호를 확인해주세요"));
         return  userRepository.findByUserIdFriends(friendTb);
     }
+/*
+서버에서 저장하는 방식
 
     @Transactional(readOnly = false)
     public UserProfileImageTbEntity profileImage(MultipartFile files, long userSq) throws IOException {
@@ -200,12 +199,13 @@ public class UserService {
             return userProfileImageRepository.updateImage(id,destinationFileName,sourceFileName,filePath);
         }
     }
+*/
 
     @Transactional(readOnly = false)
-    public String profileImage2(MultipartFile files, long userSq) throws Exception {
+    public String profileImage(MultipartFile files, long userSq) throws Exception {
         System.out.println("##### :: " + files.getBytes());
-        String test = java.util.Base64.getEncoder().encodeToString(files.getBytes());
-        byte[] test2 = files.getBytes();
+       // String test = java.util.Base64.getEncoder().encodeToString(files.getBytes());
+        byte[] fileData = files.getBytes();
         //System.out.println("#### :::::::: " + test);
         String imageUrl = files.getOriginalFilename();
         String result = "";
@@ -260,7 +260,7 @@ public class UserService {
             imageTb.setUserSq(userSq);
             imageTb.setFileName("");
             imageTb.setOriginalName(filePathName);
-            imageTb.setFileData(test2);
+            imageTb.setFileData(fileData);
             userProfileImageRepository.save(imageTb);
         }else{
             userProfileImageRepository.updateImage(id,"",filePathName,"");
@@ -298,8 +298,6 @@ public class UserService {
         friendTb.setToUserSq(toSq);
         friendRepository.save(friendTb);
     }
-
-
 
 
 }

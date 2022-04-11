@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -196,7 +195,7 @@ public class UserController {
     public ResponseEntity<?> profileImage(@RequestPart(value = "file") MultipartFile files,@RequestPart(value = "userSq") long userSq) throws Exception {
         return new ResponseEntity<>(Com.createResponseDto(true
                                                         , "프로필 이미지 변경 성공"
-                                                        , userService.profileImage2(files,userSq))
+                                                        , userService.profileImage(files,userSq))
                                     , HttpStatus.OK);
     }
 
@@ -217,7 +216,7 @@ public class UserController {
     @PatchMapping(value = "/profile/name")
     public ResponseEntity<?> profileName(@RequestBody Map map, HttpServletRequest request) {
         vaildToken(request);
-        int val = userService.profileMsg(Long.parseLong(map.get("userSq").toString()),String.valueOf(map.get("userNm")));
+        int val = userService.profileName(Long.parseLong(map.get("userSq").toString()),String.valueOf(map.get("userNm")));
         if(val>0){
             return new ResponseEntity<>(Com.createResponseDto(true,"이름 변경 완료",val)
                     , HttpStatus.OK);
