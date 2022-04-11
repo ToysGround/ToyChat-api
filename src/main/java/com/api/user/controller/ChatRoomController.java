@@ -17,7 +17,7 @@ import java.util.Map;
 @Log4j2
 //@RequestMapping("/chat")
 public class ChatRoomController {
-   /* private final ChatService chatService;
+    private final ChatService chatService;
 
     @GetMapping("/rooms")
     public ResponseEntity<?> findAllRooms(){
@@ -43,6 +43,5 @@ public class ChatRoomController {
                 Com.inputMap(true,"채팅방 조회 완료", chatService.findByRoomSq(roomId)),
                 HttpStatus.OK); //200
     }
-*/
 
 }
