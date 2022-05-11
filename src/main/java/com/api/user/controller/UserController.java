@@ -3,7 +3,7 @@ package com.api.user.controller;
 import com.api.user.common.Com;
 import com.api.user.controller.dto.ResponseDto;
 import com.api.user.controller.dto.TokenDto;
-import com.api.user.domain.entity.UserTb;
+import com.api.user.entity.UserTb;
 import com.api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;

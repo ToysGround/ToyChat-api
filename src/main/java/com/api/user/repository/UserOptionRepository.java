@@ -1,6 +1,6 @@
-package com.api.user.domain.repository;
+package com.api.user.repository;
 
-import com.api.user.domain.entity.UserOptionTb;
+import com.api.user.entity.UserOptionTb;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserOptionRepository extends JpaRepository<UserOptionTb, Long> {

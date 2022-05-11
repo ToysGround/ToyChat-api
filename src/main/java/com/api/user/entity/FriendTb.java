@@ -1,4 +1,4 @@
-package com.api.user.domain.entity;
+package com.api.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,20 +30,5 @@ public class FriendTb {
     @Column(name = "REG_DT")
     private Timestamp regDt;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FriendTb that = (FriendTb) o;
-
-        if (userSq != that.userSq) return false;
-        if (toUserSq != that.toUserSq) return false;
-        if (friendSt != null ? !friendSt.equals(that.friendSt) : that.friendSt != null) return false;
-        if (statDt != null ? !statDt.equals(that.statDt) : that.statDt != null) return false;
-        if (regDt != null ? !regDt.equals(that.regDt) : that.regDt != null) return false;
-
-        return true;
-    }
 
 }

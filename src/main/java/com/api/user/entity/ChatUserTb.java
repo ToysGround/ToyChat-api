@@ -1,4 +1,4 @@
-package com.api.user.domain.entity;
+package com.api.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,19 +27,5 @@ public class ChatUserTb {
     @Column(name = "REG_DT")
     private Timestamp regDt;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ChatUserTb that = (ChatUserTb) o;
-
-        if (chatUserSq != that.chatUserSq) return false;
-        if (roomSq != 0 ? !(roomSq == that.roomSq) : that.roomSq != 0) return false;
-        if (userSq != 0 ? !(userSq == that.userSq) : that.userSq != 0) return false;
-        if (regDt != null ? !regDt.equals(that.regDt) : that.regDt != null) return false;
-
-        return true;
-    }
 
 }

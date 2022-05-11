@@ -3,15 +3,14 @@ package com.api.user.service;
 
 import com.api.user.controller.dto.TokenDto;
 import com.api.user.controller.dto.UserDto;
-import com.api.user.domain.entity.FriendTb;
-import com.api.user.domain.entity.UserProfileImageTbEntity;
-import com.api.user.domain.entity.UserTb;
-import com.api.user.domain.repository.FriendRepository;
-import com.api.user.domain.repository.UserProfileImageRepository;
-import com.api.user.domain.repository.UserRepository;
+import com.api.user.entity.FriendTb;
+import com.api.user.entity.UserProfileImageTbEntity;
+import com.api.user.entity.UserTb;
+import com.api.user.repository.FriendRepository;
+import com.api.user.repository.UserProfileImageRepository;
+import com.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -211,11 +210,11 @@ public class UserService {
         String result = "";
 
         String filePathName = files.getOriginalFilename();
-        String fileExtName  = FilenameUtils.getExtension(filePathName).toLowerCase();
+//        String fileExtName  = FilenameUtils.getExtension(filePathName).toLowerCase();
 
         if( imageUrl.length() > 0 )
         {
-            int imageUrlLength = imageUrl.length();
+//            int imageUrlLength = imageUrl.length();
             String imageString ;
 
                 FileInputStream inputStream = null;

@@ -30,7 +30,13 @@ public class ChatRoomController {
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@RequestBody Map map, RedirectAttributes rttr){
         log.info("# Create Chat Room , Data :: " + map.toString());
-        rttr.addAttribute("roomName", chatService.createChatRoom(String.valueOf(map.get("roomNm"))));
+        rttr.addAttribute("roomName", chatService.createChatRoom(String.valueOf(map.get("roomNm"))
+                        , Long.valueOf(map.get("chatUserSq").toString())
+                        , Long.valueOf(map.get("roomSq").toString())
+                        , Long.valueOf(map.get("userSq").toString())
+        ));
+
+
         return  new ResponseEntity<>(
                 Com.inputMap(true,"채팅방 생성 완료", chatService.findAllRooms()),
                 HttpStatus.OK); //200

@@ -1,4 +1,4 @@
-package com.api.user.domain.entity;
+package com.api.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
